@@ -45,7 +45,7 @@ if ($file) {
             }
 
             // Replace varchar
-            $line = str_replace('varchar', 'varchar(255)', $line);
+            $line = str_replace('varchar', 'text', $line);
         }
 
         // Output
