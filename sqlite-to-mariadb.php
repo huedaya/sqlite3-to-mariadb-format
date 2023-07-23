@@ -48,6 +48,9 @@ if ($file) {
             $line = str_replace('varchar', 'text', $line);
         }
 
+        // Escape quote inside JSON
+        $line = str_replace('\"', '\\\"', $line);
+
         // Output
         echo $line;
     }
