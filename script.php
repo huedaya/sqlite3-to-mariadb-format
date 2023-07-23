@@ -50,6 +50,7 @@ if ($file) {
 
         // Escape quote inside JSON
         $line = str_replace('\"', '\\\"', $line);
+        $line = str_replace("\'", "\\\'", $line);
 
         // Output
         echo $line;
