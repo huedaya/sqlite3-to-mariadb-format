@@ -1,7 +1,7 @@
 <?php
 // Convert .sql of SQLITE to MariaDB format
 // 
-// php sqlite-to-mariadb.php sqlite.sql > output.mariadb.sql
+// php script.php sqlite.sql > output.mariadb.sql
 
 // Load 
 if (isset($argv[1])) {
