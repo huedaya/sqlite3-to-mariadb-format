@@ -9,4 +9,4 @@ php script.php sqlite.sql > output.mariadb.sql
 
 
 ## Bug
-- Still error if column has a JSON format default value 
+- Still error if column has a JSON format default value (https://github.com/huedaya/sqlite3-to-mariadb-format/blob/798fbefc46661586d041a4e0ac61fd609d50de0d/script.php#L41)
