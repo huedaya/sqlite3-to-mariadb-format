@@ -28,7 +28,10 @@ if ($file) {
             preg_match("/VALUES\('([^']+)',(\d+)\)/", $line, $matches);
             $table = $matches[1] ?? '';
             $value = $matches[2] ?? '';
-            $line = "ALTER TABLE `$table` AUTO_INCREMENT = $value;\n";
+            $line = "ALTER TABLE `$table` AUTO_INCREMENT = $value;\n" ;
+
+            // Change default charset
+            $line .= "ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8mb4;\n";
         }
 
         // Replace BEGIN TRANSACTION
