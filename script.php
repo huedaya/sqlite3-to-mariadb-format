@@ -30,8 +30,8 @@ if ($file) {
             $value = $matches[2] ?? '';
             $line = "ALTER TABLE `$table` AUTO_INCREMENT = $value;\n";
 
-            // Change default charset
-            $line .= "ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8mb4;\n";
+            // // Change default charset
+            // $line .= "ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8mb4;\n";
         }
 
         // Replace BEGIN TRANSACTION
@@ -91,6 +91,15 @@ if ($file) {
 
             // Replace varchar
             $line = str_replace('varchar', 'text', $line);
+
+            // Replace default charset 
+            $charset = ' CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;';
+            $lastSemicolonPos = strrpos($line, ';');
+            if ($lastSemicolonPos !== false) {
+                $line = substr_replace($line, $charset, $lastSemicolonPos, 1);
+            } else {
+                $line = $line;
+            }
         }
 
         // Output
