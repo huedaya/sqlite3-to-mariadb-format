@@ -28,7 +28,7 @@ if ($file) {
             preg_match("/VALUES\('([^']+)',(\d+)\)/", $line, $matches);
             $table = $matches[1] ?? '';
             $value = $matches[2] ?? '';
-            $line = "ALTER TABLE `$table` AUTO_INCREMENT = $value;\n" ;
+            $line = "ALTER TABLE `$table` AUTO_INCREMENT = $value;\n";
 
             // Change default charset
             $line .= "ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8mb4;\n";
@@ -39,9 +39,51 @@ if ($file) {
             $line = str_replace('BEGIN TRANSACTION', 'START TRANSACTION', $line);
         }
 
-        // Replace "" to ``
+        // Fix JSON escaping as a default value
         if (preg_match('/CREATE TABLE IF NOT EXISTS/', $line)) {
-            $line = str_replace('"', '`', $line);
+            $pattern = '(
+                \{ # JSON object start
+                    ( 
+                        \s*
+                        "[^"]+"                  # key
+                        \s*:\s*                  # colon
+                        (
+                                                 # value
+                            (?: 
+                                "[^"]+" |        # string
+                                \d+(?:\.\d+)? |  # number
+                                true |
+                                false |
+                                null
+                            ) | 
+                            (?R)                 # pattern recursion
+                        )
+                        \s*
+                        ,?                       # comma
+                    )* 
+                \} # JSON object end
+            )x';
+
+            $jsonInStringOriginal = null;
+            $jsonInStringEscaped = null;
+            preg_replace_callback(
+                $pattern,
+                function ($match) use (&$line, &$jsonInStringEscaped, &$jsonInStringOriginal) {
+                    $jsonInStringOriginal = $match[0];
+                    $jsonInStringEscaped = json_decode($jsonInStringOriginal);
+                    if ($jsonInStringEscaped) {
+                        $jsonInStringEscaped = json_encode($jsonInStringOriginal);
+                        $jsonInStringEscaped = trim($jsonInStringEscaped, '"');
+
+                        $line = str_replace($jsonInStringOriginal, $jsonInStringEscaped, $line);
+                    }
+                },
+                $line
+            );
+
+            // Replace "" to `` (only when its not escaped)
+            $line = preg_replace('/(?<!\\\\)"/', '`', $line);
+
             // Replace autoincrement
             if (strpos($line, 'autoincrement') !== false) {
                 $line = str_replace('autoincrement', 'AUTO_INCREMENT', $line);
@@ -50,10 +92,6 @@ if ($file) {
             // Replace varchar
             $line = str_replace('varchar', 'text', $line);
         }
-
-        // Escape quote inside JSON
-        $line = str_replace('\"', '\\\"', $line);
-        $line = str_replace("\'", "\\\'", $line);
 
         // Output
         echo $line;
