@@ -9,4 +9,4 @@ php script.php sqlite.sql > output.mariadb.sql
 
 
 ## Bug
-- Still error if column has a JSON format default value (fixed)
+- so far working ok
