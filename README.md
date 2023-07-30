@@ -8,5 +8,5 @@ php script.php sqlite.sql > output.mariadb.sql
 ```
 
 
-## Bug
-- so far working ok
+## Bug/Limitation
+- working ok so far 
