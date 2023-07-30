@@ -100,12 +100,12 @@ if ($file) {
             } else {
                 $line = $line;
             }
+        }
 
-            // Fix quote escape 
-            // https://www.databasestar.com/sql-escape-single-quote/
-            if (preg_match('/^INSERT INTO/', $line)) {
-                $line = str_replace("\''", "''", $line);
-            }
+        // Fix quote escape 
+        // https://www.databasestar.com/sql-escape-single-quote/
+        if (preg_match('/^INSERT INTO/', $line)) {
+            $line = str_replace("\''", "''", $line);
         }
 
         // Output
