@@ -9,4 +9,4 @@ php script.php sqlite.sql > output.mariadb.sql
 
 
 ## Bug/Limitation
-- working ok so far 
+- no working for some table realation
