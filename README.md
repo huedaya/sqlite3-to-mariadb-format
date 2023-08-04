@@ -8,5 +8,6 @@ php script.php sqlite.sql > output.mariadb.sql
 ```
 
 
-## Bug/Limitation
+## Known Bug/Limitation
 - no working for some table realation
+- sometimes fail to recognise the JSON, which which altering its content
